@@ -11,8 +11,12 @@ class RegistrationController {
         $user = new User($username, $email);
         $user->fullName = $full_name;
 
-        if ($user->isValidSyntax(true) && !$user->isUserTaken(true)) {
-            $user->addToDB($password);
+        if ($user->isValidSyntax(true)) {
+            if (!$user->isUserTaken()) {
+                $user->addToDB($password);
+            } else {
+                Feedback::add('ERR', 'Username/Email is already taken.');
+            }
         }
     }
 }

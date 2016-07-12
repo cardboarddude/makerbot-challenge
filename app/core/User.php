@@ -23,7 +23,15 @@ class User {
         if (preg_match($regex, $this->username)) {
             return true;
         }
-        if ($show_feedback) Feedback::add('ERR', 'Invalid username.');
+        if ($show_feedback) {
+            $feedback = 'Invalid username. Usernames may contain...<br><ul>';
+
+            foreach (Config::get('USER_CONST')['username']['syntax_rules'] as $rule) {
+                $feedback .= "<li>".$rule."</li>";
+            }
+            $feedback .= "</ul>";
+            Feedback::add('ERR', $feedback);
+        }
         return false;
     }
     public function isValidEmailSyntax($show_feedback = false) {
@@ -37,17 +45,17 @@ class User {
     }
 
     public function isUserTaken() {
-        return ($this->isUsernameTaken() && $this->isEmailTaken());
+        return ($this->isUsernameTaken() || $this->isEmailTaken());
     }
 
     public function isEmailTaken() {
-        $query_db = new Query('user');
-        return $query_db->isFieldValueTaken(array('email'), array($this->email));
+        $query = new Query('user');
+        return $query->isFieldValueTaken(array('email'), array($this->email));
     }
 
     public function isUsernameTaken() {
-        $query_db = new Query('user');
-        return $query_db->isFieldValueTaken(array('username'), array($this->username));
+        $query = new Query('user');
+        return $query->isFieldValueTaken(array('username'), array($this->username));
     }
 
     public function setDateLastLoggedIn() {
@@ -77,10 +85,11 @@ class User {
 
         $query->selectCols($select_col_names);
         $query->whereColsEqual($where_col_names);
-        $result = $query->prepareAndExecute($where_col_names, $where_col_values);
+        $query->prepare($where_col_names, $where_col_values);
+        $query->execute();
 
-        if (is_object($result)) {
-            $password_hash = $result->password;
+        if ($query->isSuccess()) {
+            $password_hash = $query->getResult()->password;
             return password_verify($password, $password_hash);
         }
 
@@ -93,9 +102,10 @@ class User {
         $col_values = array($this->username, $this->email, $this->fullName, password_hash($password, PASSWORD_BCRYPT));
         $query = new Query('user');
         $query->insert($col_names);
-        $is_success = $query->prepareAndExecute($col_names, $col_values);
+        $query->prepare($col_names, $col_values);
+        $query->execute();
 
-        if ($is_success) {
+        if ($query->isSuccess()) {
             Feedback::add('OK', 'Successfully added new user.');
         } else {
             Feedback::add('ERR', 'Failed to add new user.');

@@ -34,7 +34,7 @@ class SQLiteDB
                 }
             }
             //explict errors for debug purposes
-            $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            //$connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             Feedback::add('ERR', 'PDO database connection problem: '.$e->getMessage());
         } catch (Exception $e) {

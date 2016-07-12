@@ -41,6 +41,11 @@
     padding: 10px;
     list-style: none;
 }
+.feedback > ul > li > ul {
+    padding: 10px;
+    padding-left: 27px;
+    list-style: disc;
+}
 .feedback:not(:last-child) {
     margin-bottom: 10px;
 }

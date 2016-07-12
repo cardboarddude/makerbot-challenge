@@ -25,9 +25,9 @@ return array(
 "PATH_DB"=>"",
 
 "USER_CONST"=>array("username"=>array("regex_validation"=>'#[[:alnum:]\\.\\-\\_]{4,72}#',
-                                      "syntax_rules"=>array("Alphanumeric",
-                                                            "Symbols: period (.), underscore (_), or dash (-).",
-                                                            "Length: 4 to 72")
+                                      "syntax_rules"=>array("Alphanumeric characters",
+                                                            "Symbols: period (.), underscore (_), or dash (-)",
+                                                            "Between 4 and 72 characters")
                                       ),
                     "email"=>array("regex_validation"=>
 /* Source: http://emailregex.com/ General Email Regex (RFC 5322 Official Standard) */
