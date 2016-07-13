@@ -1,7 +1,6 @@
 <?php
 
 class User {
-    const LOGIN_STATUS = 'is_user_logged_in';
 
     public $username;
     public $email;
@@ -9,9 +8,8 @@ class User {
 
     public function __construct($username, $email) {
         $this->username = $username;
-        $this->email = $email;
+        $this->email = strtolower($email);
         $this->fullName = "";
-        $this->isLoggedIn = false;
     }
 
     public function isValidSyntax($show_feedback = false) {
@@ -34,6 +32,7 @@ class User {
         }
         return false;
     }
+
     public function isValidEmailSyntax($show_feedback = false) {
         $regex = Config::get('USER_CONST')['email']['regex_validation'];
 
@@ -56,12 +55,6 @@ class User {
     public function isUsernameTaken() {
         $query = new Query('user');
         return $query->isFieldValueTaken(array('username'), array($this->username));
-    }
-
-    public function setDateLastLoggedIn() {
-        if (LoginController::getLoginStatus()) {
-            //TODO: Update db with today's date
-        }
     }
 
     public function isValidPassword($password) {
@@ -105,10 +98,26 @@ class User {
         $query->prepare($col_names, $col_values);
         $query->execute();
 
+        return $query->isSuccess();
+    }
+
+    public function loadUserFromDB() {
+        $where_col_names = array('username', 'email');
+        $where_col_values = array($this->username, $this->email);
+
+        $query = new Query('user');
+        $query->selectCols();
+        $query->whereColsEqual($where_col_names);
+        $query->prepare($where_col_names, $where_col_values);
+        $query->execute();
+
         if ($query->isSuccess()) {
-            Feedback::add('OK', 'Successfully added new user.');
+            $user_info = $query->getResult();
+            $this->username = $user_info->username;
+            $this->email = $user_info->email;
+            $this->fullName = $user_info->full_name;
         } else {
-            Feedback::add('ERR', 'Failed to add new user.');
+            Feedback::add('ERR', 'Failed to load user information.');
         }
     }
 }

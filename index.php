@@ -1,29 +1,14 @@
 <?php
-if (!$_SESSION) {
-    session_start();
-}
 
-$_ENV['APPLICATION_ENV'] = 'development';
-
-include 'Config.php';
-Config::__init();
+include 'app/core/Config.php';
+Config::__init('development');
 
 switch ($_GET['action']) {
     case 'register':
         RegistrationController::doRegistration();
-        if (LoginController::getLoginStatus()) {
-            $_GET['page'] = 'index';
-        } else {
-            $_GET['page'] = 'register';
-        }
         break;
     case 'login':
         LoginController::doLogin();
-        if (LoginController::getLoginStatus()) {
-            $_GET['page'] = 'index';
-        } else {
-            $_GET['page'] = 'login';
-        }
         break;
     case 'logout':
         LoginController::doLogout();
@@ -32,7 +17,8 @@ switch ($_GET['action']) {
     default:
 }
 
-switch ($_GET['page']) {
+$page = $_GET['page'];
+switch ($page) {
     case 'register':
         View::render('RegistrationView');
         break;
@@ -46,7 +32,11 @@ switch ($_GET['page']) {
         View::render('IndexView');
         break;
     default:
-        Feedback::add('ERR', '404: Page could not be found.');
+        if (strlen($page) > 0) {
+            Feedback::add('ERR', "404: Page '$page' could not be found.");
+        } else {
+            Feedback::add('ERR', "404: Page could not be found.");
+        }
         View::render('IndexView');
 }
 

@@ -1,12 +1,12 @@
 <?php
 
 class Query {
-
     private $tableName;
     private $select = "";
     private $where = "";
     private $limit = "";
     private $insert = "";
+    private $update = "";
 
     private $db = null;
     private $sql = null;
@@ -19,8 +19,12 @@ class Query {
         $this->db = new SQLiteDB();
     }
 
-    public function selectCols($col_names) {
+    public function selectCols($col_names = array()) {
         $this->select = QueryFactory::buildSelect($this->tableName, $col_names);
+    }
+
+    public function updateCols($col_names) {
+        $this->update = QueryFactory::buildUpdate($this->tableName, $col_names);
     }
 
     public function whereColsEqual($col_names) {
@@ -37,7 +41,7 @@ class Query {
     }
 
     public function prepare($bind_names, $bind_values) {
-        $this->sql = $this->select . $this->where . $this->limit . $this->insert . ';';
+        $this->sql = $this->select . $this->update . $this->where . $this->limit . $this->insert . ';';
         $this->connection = $this->db->getNewConnection();
 
         try {
@@ -63,7 +67,6 @@ class Query {
     public function getResult() {
         if ($this->result == null && $this->query != null) {
             $this->result = $this->query->fetchObject();
-            //var_dump($this->sql);
             $this->connection = null;
             $this->query = null;
         }

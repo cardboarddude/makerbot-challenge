@@ -48,6 +48,18 @@ class QueryFactory {
         return $sql;
     }
 
+    public static function buildUpdate($table, $col_names) {
+        $sql = " UPDATE $table SET ";
+
+        for ($i = 0; $i < sizeof($col_names); $i++) {
+            $col_names[$i] = $col_names[$i].' = :'.$col_names[$i];
+        }
+
+        $sql .= self::buildSeparatedString($col_names,$logical_op);
+
+        return $sql;
+    }
+
     private static function buildSeparatedString($list_items, $delimeter) {
         $delimeter_separated_string = "";
         for ($i = sizeof($list_items) - 1; $i >= 0; $i--) {

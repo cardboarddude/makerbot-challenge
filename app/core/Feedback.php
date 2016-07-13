@@ -2,20 +2,20 @@
 
 class Feedback {
 
-    const NAME = 'FEEDBACK';
+    const SESSION_NAME = 'FEEDBACK';
 
     public static function add($category, $feedback) {
-        if (!isset($_SESSION[self::NAME])) {
-            $_SESSION[self::NAME] = [];
+        if (!isset($_SESSION[self::SESSION_NAME])) {
+            $_SESSION[self::SESSION_NAME] = [];
         }
-        if (!isset($_SESSION[self::NAME][$category])) {
-            $_SESSION[self::NAME][$category] = [];
+        if (!isset($_SESSION[self::SESSION_NAME][$category])) {
+            $_SESSION[self::SESSION_NAME][$category] = [];
         }
-        $_SESSION[self::NAME][$category] = array_merge($_SESSION[self::NAME][$category], array($feedback));
+        $_SESSION[self::SESSION_NAME][$category] = array_merge($_SESSION[self::SESSION_NAME][$category], array($feedback));
     }
 
     public static function getFeedbackList($category) {
-        $feedback_array = $_SESSION[self::NAME][$category];
+        $feedback_array = $_SESSION[self::SESSION_NAME][$category];
         if (empty($feedback_array)) return "";
 
         $ul_list = "<ul class='feedback-category $category'>";
@@ -23,13 +23,13 @@ class Feedback {
             $ul_list .= "<li>$feedback_item</li>";
         }
         $ul_list .= "</ul>";
-        $_SESSION[self::NAME][$category] = [];
+        $_SESSION[self::SESSION_NAME][$category] = [];
         return $ul_list;
     }
 
     public static function getAllFeedbackList() {
         $ul_list = "";
-        foreach ($_SESSION[self::NAME] as $category => $array) {
+        foreach ($_SESSION[self::SESSION_NAME] as $category => $array) {
             $ul_list .= self::getFeedbackList($category);
         }
         return $ul_list;

@@ -2,6 +2,7 @@
 return array(
 "PROJECT_NAME"=>"Makerbot Challenge",
 "URI"=>'http://'.$_SERVER['HTTP_HOST'].'/projects/makerbot-challenge/',
+"PATH_PROJECT"=>'/projects/makerbot-challenge/',
 "PATH_VIEW" => "app/view/",
 "PATH_CONTROLLER" => "app/controller/",
 "PATH_MODEL" => "app/model/",
@@ -11,9 +12,15 @@ return array(
                       "IndexView"=>"app/view/",
                       "RegistrationView"=>"app/view/",
                       "View"=>"app/view/",
+
+                      "LoginModel"=>"app/model/",
+                      "IndexModel"=>"app/model/",
+                      "RegistrationModel"=>"app/model/",
+
                       "RequestController"=>"app/controller/",
                       "LoginController"=>"app/controller/",
                       "RegistrationController"=>"app/controller/",
+
                       "Feedback"=>"app/core/",
                       "Query"=>"app/core/",
                       "QueryFactory"=>"app/core/",
@@ -24,7 +31,7 @@ return array(
 "DB_NAME"=>"makerbot-challenge",
 "PATH_DB"=>"",
 
-"USER_CONST"=>array("username"=>array("regex_validation"=>'#[[:alnum:]\\.\\-\\_]{4,72}#',
+"USER_CONST"=>array("username"=>array("regex_validation"=>'#^[[:alnum:]\x2e\x2d\x5f]{4,72}$#',
                                       "syntax_rules"=>array("Alphanumeric characters",
                                                             "Symbols: period (.), underscore (_), or dash (-)",
                                                             "Between 4 and 72 characters")

@@ -4,13 +4,19 @@ class Config {
     private static $environment;
     private static $configuration;
 
-    public static function __init() {
+    public static function __init($environment) {
         spl_autoload_register(function($class_name) {
             if (!empty($class_name)) {
                 $class_subfolder = self::get('PATH_CLASS');
                 include_once $class_subfolder[$class_name] . $class_name.'.php';
             }
         });
+
+        $_ENV['APPLICATION_ENV'] = $environment;
+
+        if (!$_SESSION) {
+            session_start();
+        }
     }
 
     private static function getPath($file_name) {

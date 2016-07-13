@@ -13,44 +13,32 @@ class LoginController {
         } else if ($user->isValidEmailSyntax() && $user->isEmailTaken()) {
             $user->username = "";
         } else {
+            $_GET['page'] = 'login';
             Feedback::add('ERR', 'Incorrect username or password.');
             return;
         }
 
-        if ($user->isValidPassword($password)) {
-            self::setLoginStatus(true, $user);
+        if (LoginModel::isUserPasswordValid($user, $password)) {
+            LoginModel::setLoginStatus(true, $user);
+            $_GET['page'] = 'index';
+            Feedback::add('OK', 'Successfully logged in.');
         } else {
+            $_GET['page'] = 'login';
             Feedback::add('ERR', 'Incorrect username or password.');
         }
     }
 
     public static function doLogout() {
-        if (self::getLoginStatus()) {
-            self::setLoginStatus(false);
+        if (LoginModel::getLoginStatus()) {
+            LoginModel::setLoginStatus(false);
+            Feedback::add('OK', 'Successfully logged out.');
         } else {
             Feedback::add('ERR', 'You are already logged out.');
         }
     }
 
-    public static function setLoginStatus($status, $user = "") {
-        if ($status) {
-            $_SESSION['user'] = $user;
-            $_SESSION[User::LOGIN_STATUS] = $status;
-            $user->setDateLastLoggedIn();
-            Feedback::add('OK', 'Successfully logged in.');
-        } else {
-            $_SESSION['user'] = "";
-            $_SESSION[User::LOGIN_STATUS] = $status;
-            Feedback::add('OK', 'Successfully logged out.');
-        }
-    }
-
-    public static function getLoginStatus() {
-        return $_SESSION[User::LOGIN_STATUS];
-    }
-
     public static function getLoginWelcome() {
-        if (self::getLoginStatus()) {
+        if (LoginModel::getLoginStatus()) {
             $welcome = "";
             if (strlen($_SESSION['user']->fullName) > 0) {
                 $welcome = 'Hello, '.$_SESSION['user']->fullName.'! ';

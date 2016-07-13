@@ -55,6 +55,9 @@
 .feedback .OK {
     background: rgba(34, 255, 46, 0.73);
 }
+.feedback .BUG {
+    background: rgba(22, 167, 255, 0.73);
+}
 
 #footer {
     height: 38px;

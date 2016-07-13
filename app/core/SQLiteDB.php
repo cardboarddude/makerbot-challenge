@@ -50,7 +50,8 @@ class SQLiteDB
                 username TEXT UNIQUE,
                 email TEXT UNIQUE,
                 full_name TEXT,
-                password TEXT);";
+                password TEXT,
+                last_login_timestamp TEXT);";
 		return $connection->query($sql);
 	}
 }
