@@ -32,7 +32,7 @@ class LoginModel {
                 break;
             default:
                 Feedback::add('BUG', 'Unknown login type: '.$login_type);
-                return;
+                return ;
         }
         return self::isValidCredentials($login_type, $login_value, $password);
     }
@@ -77,6 +77,12 @@ class LoginModel {
             $_SESSION['user'] = "";
             $_SESSION[self::IS_LOGGED_IN] = $status;
         }
+    }
+
+    public static function isLoggedInAs($user) {
+        return (($_SESSION['user']->username == $user->username
+              || $_SESSION['user']->email == $user->email))
+              && self::getLoginStatus();
     }
 
     public static function getLoginStatus() {

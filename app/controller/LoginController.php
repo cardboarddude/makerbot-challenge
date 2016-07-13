@@ -15,7 +15,12 @@ class LoginController {
         } else {
             $_GET['page'] = 'login';
             Feedback::add('ERR', 'Incorrect username or password.');
-            return;
+            return ;
+        }
+
+        if (LoginModel::isLoggedInAs($user)) {
+            Feedback::add('ERR', 'You are already logged in.');
+            return ;
         }
 
         if (LoginModel::isUserPasswordValid($user, $password)) {
