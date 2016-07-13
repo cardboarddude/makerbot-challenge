@@ -1,17 +1,15 @@
 <?php
 
 class Config {
-    private static $environment;
     private static $configuration;
+    private static $environment;
 
     public static function __init($environment) {
         spl_autoload_register(function($class_name) {
-            if (!empty($class_name)) {
-                $class_subfolder = self::get('PATH_CLASS');
-                include_once $class_subfolder[$class_name] . $class_name.'.php';
-            }
+            self::autoloadClass($class_name);
         });
 
+        self::$environment = $environment;
         $_ENV['APPLICATION_ENV'] = $environment;
 
         if (!$_SESSION) {
@@ -42,14 +40,11 @@ class Config {
     private static function autoloadClass($class_name) {
         if (!empty($class_name)) {
             $class_subfolder = self::get('PATH_CLASS');
-
-            return self::get('URI').$class_subfolder[$class_name] . $class_name.'.php';
+            include_once $class_subfolder[$class_name] . $class_name.'.php';
         }
-
-        return "";
     }
 
     private static function getEnv() {
-        return $_ENV['APPLICATION_ENV'];
+        return self::$environment;
     }
 }

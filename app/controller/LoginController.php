@@ -5,7 +5,6 @@ class LoginController {
     public static function doLogin() {
         $username_or_email = RequestController::getCleanPost('username_or_email');
         $password = RequestController::getCleanPost('password');
-
         $user = new User($username_or_email, $username_or_email);
 
         if (!LoginModel::isUserLoginValid($user)) {
@@ -13,7 +12,7 @@ class LoginController {
             Feedback::add('ERR', 'Incorrect username or password.');
             return ;
         }
-        
+
         if (LoginModel::isLoggedInAs($user)) {
             $_GET['page'] = 'login';
             Feedback::add('ERR', 'You are already logged in.');

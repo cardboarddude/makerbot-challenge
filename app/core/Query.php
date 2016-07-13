@@ -82,6 +82,8 @@ class Query {
 
         if ($this->isSuccess()) {
             return $this->getResult() && (count($this->getResult()) > 0);
+        } else {
+            Feedback::add('ERR', 'Database error.');
         }
     }
 }

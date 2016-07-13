@@ -43,7 +43,7 @@ class SQLiteDB
         return $connection;
     }
 
-    private function createTables($connection) {
+    private static function createTables($connection) {
     // TODO: Add ALTER TABLE functionality if Table exists, but columns don't match
 		$sql = "CREATE TABLE IF NOT EXISTS user
 		        (id INTEGER PRIMARY KEY AUTOINCREMENT,
