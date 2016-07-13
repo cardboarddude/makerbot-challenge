@@ -20,6 +20,17 @@ class LoginModel {
         $query->execute();
     }
 
+    public static function isUserLoginValid($user) {
+        if ($user->isValidUsernameSyntax() && $user->isUsernameTaken()) {
+            $user->email = "";
+        } else if ($user->isValidEmailSyntax() && $user->isEmailTaken()) {
+            $user->username = "";
+        } else {
+            return false;
+        }
+        return true;
+    }
+
     public static function isUserPasswordValid($user, $password) {
         $login_type = self::getLoginType($user);
         $login_value = "";

@@ -8,17 +8,14 @@ class LoginController {
 
         $user = new User($username_or_email, $username_or_email);
 
-        if ($user->isValidUsernameSyntax() && $user->isUsernameTaken()) {
-            $user->email = "";
-        } else if ($user->isValidEmailSyntax() && $user->isEmailTaken()) {
-            $user->username = "";
-        } else {
+        if (!LoginModel::isUserLoginValid($user)) {
             $_GET['page'] = 'login';
             Feedback::add('ERR', 'Incorrect username or password.');
             return ;
         }
-
+        
         if (LoginModel::isLoggedInAs($user)) {
+            $_GET['page'] = 'login';
             Feedback::add('ERR', 'You are already logged in.');
             return ;
         }
